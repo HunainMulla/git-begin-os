@@ -300,11 +300,11 @@ export default function Index() {
     submit(formData, { method: "get" })
   }
 
-  const handleFilterChange = (newFilters) => {
+  const handleFilterChange = (newFilters: any) => {
     setMinStars(newFilters.minStars)
     setMaxStars(newFilters.maxStars)
     setMinForks(newFilters.minForks)
-    setLanguage(newFilters.language)
+    setLanguage(Array.isArray(newFilters.language) ? newFilters.language : [newFilters.language].filter(Boolean))
     setCategory(newFilters.category)
     setFramework(newFilters.framework)
     setIsAssigned(newFilters.isAssigned)
@@ -314,8 +314,9 @@ export default function Index() {
     const formData = new FormData()
     Object.entries(newFilters).forEach(([key, value]) => {
       if (key === "language") {
-        formData.set(key, value.join(" "))
-      } else {
+        const langValue = Array.isArray(value) ? value : [value].filter(Boolean)
+        formData.set(key, langValue.join(" "))
+      } else if (value !== undefined && value !== null) {
         formData.append(key, value.toString())
       }
     })
